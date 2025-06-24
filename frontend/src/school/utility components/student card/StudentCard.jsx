@@ -44,7 +44,7 @@ export default function StudentCardAdmin({
           component="img"
           alt="green iguana"
           height="360"
-          image={`/images/uploaded/student/${student.student_image}`}
+          image={`${student.student_image}`}
         />
         <CardContent>
           <Typography
@@ -89,6 +89,7 @@ export default function StudentCardAdmin({
             variant="contained"
             sx={{ background: "red", color: "#fff" }}
             onClick={() => {
+              // console.log(student._id)
               handleDelete(student._id);
             }}
           >
@@ -99,6 +100,7 @@ export default function StudentCardAdmin({
             variant="contained"
             sx={{ background: "gold", color: "#222222" }}
             onClick={() => {
+              // console.log(student._id)
               handleEdit(student._id);
             }}
           >

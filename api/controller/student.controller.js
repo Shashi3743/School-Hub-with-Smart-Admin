@@ -1,9 +1,9 @@
-import { IncomingForm } from "formidable";
-import { readFileSync, writeFileSync, existsSync, unlink } from "fs";
-import { join, basename } from "path";
+import { readFileSync, existsSync, unlinkSync } from "fs";
+import { join } from "path";
 import pkg from 'bcryptjs';
 const { genSaltSync, hashSync, compareSync } = pkg;
 import jwt from 'jsonwebtoken';
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import Student from "../model/student.model.js";
 
 const jwtSecret = process.env.JWTSECRET;
@@ -32,45 +32,47 @@ export async function getStudentWithQuery(req, res) {
 
 // Register new student
 export async function registerStudent(req, res) {
-  const form = new IncomingForm();
+  try {
+    const { name, email, password, age, gender, guardian, guardian_phone, student_class } = req.body;
 
-  form.parse(req, async (err, fields, files) => {
-    try {
-      const existing = await Student.findOne({ email: fields.email[0] });
-      if (existing) {
-        return res.status(400).json({ success: false, message: "Email already exists." });
-      }
-
-      const photo = files.image[0];
-      const filename = photo.originalFilename.replace(" ", "_");
-      const filepath = join(__dirname, '../../frontend/public/images/uploaded/student', filename);
-      const photoData = readFileSync(photo.filepath);
-      writeFileSync(filepath, photoData);
-
-      const salt = genSaltSync(10);
-      const hashedPassword = hashSync(fields.password[0], salt);
-
-      const newStudent = new Student({
-        email: fields.email[0],
-        name: fields.name[0],
-        student_class: fields.student_class[0],
-        guardian: fields.guardian[0],
-        guardian_phone: fields.guardian_phone[0],
-        age: fields.age[0],
-        gender: fields.gender[0],
-        student_image: filename,
-        password: hashedPassword,
-        school: req.user.id
-      });
-
-      const saved = await newStudent.save();
-      res.status(200).json({ success: true, message: "Student registered", data: saved });
-
-    } catch (e) {
-      console.error("Error registering student:", e);
-      res.status(500).json({ success: false, message: "Registration failed." });
+    const existing = await Student.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ success: false, message: "Email already exists." });
     }
-  });
+
+    const imageLocalPath = req.file?.path;
+    if (!imageLocalPath) {
+      return res.status(400).json({ success: false, message: "Image file is required." });
+    }
+
+    const imageUploadRes = await uploadOnCloudinary(imageLocalPath);
+    if (!imageUploadRes?.url) {
+      return res.status(500).json({ success: false, message: "Image upload failed." });
+    }
+
+    const salt = genSaltSync(10);
+    const hashedPassword = hashSync(password, salt);
+
+    const newStudent = new Student({
+      name,
+      email,
+      password: hashedPassword,
+      age,
+      gender,
+      guardian,
+      guardian_phone,
+      student_class,
+      student_image: imageUploadRes.url,
+      school: req.user.id
+    });
+
+    const saved = await newStudent.save();
+    res.status(200).json({ success: true, message: "Student registered", data: saved });
+
+  } catch (e) {
+    console.error("Error registering student:", e);
+    res.status(500).json({ success: false, message: "Registration failed." });
+  }
 }
 
 // Student login
@@ -144,47 +146,38 @@ export async function getOwnDetails(req, res) {
 
 // Update student by ID
 export async function updateStudentWithId(req, res) {
-  const form = new IncomingForm({ multiples: false, keepExtensions: true });
-  form.uploadDir = join(__dirname, '../../frontend/public/images/uploaded/student');
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({ message: "Error parsing form." });
+  console.log("tried")
+  try {
+    console.log(req.params)
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found." });
     }
 
-    try {
-      const student = await Student.findById(req.params.id);
-      if (!student) {
-        return res.status(404).json({ message: "Student not found." });
+    const { name, guardian, guardian_phone, age, gender, student_class } = req.body;
+
+    if (name) student.name = name;
+    if (guardian) student.guardian = guardian;
+    if (guardian_phone) student.guardian_phone = guardian_phone;
+    if (age) student.age = age;
+    if (gender) student.gender = gender;
+    if (student_class) student.student_class = student_class;
+
+    if (req.file) {
+      const imageUploadRes = await uploadOnCloudinary(req.file.path);
+      if (!imageUploadRes?.url) {
+        return res.status(500).json({ message: "Image upload failed." });
       }
-
-      Object.keys(fields).forEach(field => {
-        student[field] = fields[field][0];
-      });
-
-      if (files.image) {
-        const oldPath = join(form.uploadDir, student.student_image);
-        if (student.student_image && existsSync(oldPath)) {
-          unlink(oldPath, (err) => {
-            if (err) console.error("Old image deletion error:", err);
-          });
-        }
-
-        const filename = basename(files.image[0].originalFilename.replace(" ", "_"));
-        const filePath = join(form.uploadDir, filename);
-        const fileData = readFileSync(files.image[0].filepath);
-        writeFileSync(filePath, fileData);
-        student.student_image = filename;
-      }
-
-      await student.save();
-      res.status(200).json({ message: "Student updated", data: student });
-
-    } catch (e) {
-      console.error("Update error:", e);
-      res.status(500).json({ message: "Update failed." });
+      student.student_image = imageUploadRes.url;
     }
-  });
+
+    await student.save();
+    res.status(200).json({ message: "Student updated", data: student });
+
+  } catch (e) {
+    console.error("Update error:", e);
+    res.status(500).json({ message: "Update failed." });
+  }
 }
 
 // Delete student

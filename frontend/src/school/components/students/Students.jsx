@@ -11,7 +11,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useFormik } from "formik";
 import axios from "axios";
 import { baseUrl } from "../../../environment";
 import CustomizedSnackbars from "../../../basic utility components/CustomizedSnackbars";
@@ -21,34 +20,50 @@ import StudentCardAdmin from "../../utility components/student card/StudentCard"
 export default function Students() {
   const [studentClass, setStudentClass] = useState([]);
   const [students, setStudents] = useState([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    student_class: "",
+    gender: "",
+    age: "",
+    guardian: "",
+    guardian_phone: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
   const [isEdit, setEdit] = useState(false);
   const [editId, setEditId] = useState(null);
-
   const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null); // Independent state for image preview
-
-  // Handle image file selection
-  const addImage = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setImageUrl(URL.createObjectURL(selectedFile));
-    }
-  };
-
+  const [imageUrl, setImageUrl] = useState(null);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("success");
+  const fileInputRef = useRef(null);
   const [params, setParams] = useState({});
-  const handleClass = (e) => {
-    setParams((prevParams) => ({
-      ...prevParams,
-      student_class: e.target.value || undefined,
-    }));
+
+  const resetMessage = () => setMessage("");
+
+  const fetchStudentClass = () => {
+    axios.get(`${baseUrl}/class/fetch-all`).then((resp) => setStudentClass(resp.data.data));
   };
 
-  const handleSearch = (e) => {
-    setParams((prevParams) => ({
-      ...prevParams,
-      search: e.target.value || undefined,
-    }));
+  const fetchStudents = () => {
+    axios.get(`${baseUrl}/student/fetch-with-query`, { params }).then((resp) => setStudents(resp.data.data));
+  };
+
+  useEffect(() => {
+    fetchStudents();
+    fetchStudentClass();
+  }, [message, params]);
+
+  const handleClearFile = () => {
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setFile(null);
+    setImageUrl(null);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDelete = (id) => {
@@ -60,7 +75,7 @@ export default function Students() {
           setType("success");
         })
         .catch((e) => {
-          setMessage(e.response.data.message);
+          setMessage(e.response?.data?.message || "Delete failed");
           setType("error");
         });
     }
@@ -68,378 +83,214 @@ export default function Students() {
 
   const handleEdit = (id) => {
     setEdit(true);
-    axios
-      .get(`${baseUrl}/student/fetch-single/${id}`)
-      .then((resp) => {
-        const data = resp.data.data;
-        Formik.setValues({
-          email: data.email,
-          name: data.name,
-          student_class: data.student_class._id,
-          gender: data.gender,
-          age: data.age,
-          guardian: data.guardian,
-          guardian_phone: data.guardian_phone,
-          password: data.password,
-        });
-        setImageUrl(data.image); // Assuming response has `image` URL field for preview
-        setEditId(data._id);
-      })
-      .catch(() => console.log("Error in fetching edit data."));
+    axios.get(`${baseUrl}/student/fetch-single/${id}`).then((resp) => {
+      const data = resp.data.data;
+      setFormData({
+        email: data.email,
+        name: data.name,
+        student_class: data.student_class?._id || "",
+        gender: data.gender,
+        age: data.age,
+        guardian: data.guardian,
+        guardian_phone: data.guardian_phone,
+        password: "",
+      });
+      setImageUrl(data.student_image);
+      setFile(null);
+      setEditId(data._id);
+    });
   };
 
   const cancelEdit = () => {
     setEdit(false);
-    Formik.resetForm();
+    setEditId(null);
+    setFormData({
+      name: "",
+      email: "",
+      student_class: "",
+      gender: "",
+      age: "",
+      guardian: "",
+      guardian_phone: "",
+      password: "",
+    });
+    handleClearFile();
+    setErrors({});
   };
 
-  const [message, setMessage] = useState("");
-  const [type, setType] = useState("success");
-  const resetMessage = () => setMessage("");
-
-  const initialValues = {
-    name: "",
-    email: "",
-    student_class: "",
-    gender: "",
-    age: "",
-    guardian: "",
-    guardian_phone: "",
-    password: "",
-  };
-
-  const Formik = useFormik({
-    initialValues,
-    validationSchema: studentSchema,
-    onSubmit: (values) => {
-      if (isEdit) {
-        const fd = new FormData();
-        Object.keys(values).forEach((key) => fd.append(key, values[key]));
-        if (file) {
-          fd.append("image", file, file.name);
-        }
-
-        axios
-          .patch(`${baseUrl}/student/update/${editId}`, fd)
-          .then((resp) => {
-            setMessage(resp.data.message);
-            setType("success");
-            handleClearFile();
-            cancelEdit();
-          })
-          .catch((e) => {
-            setMessage(e.response.data.message);
-            setType("error");
-          });
-      } else {
-        if (file) {
-          const fd = new FormData();
-          fd.append("image", file, file.name);
-          Object.keys(values).forEach((key) => fd.append(key, values[key]));
-
-          axios
-            .post(`${baseUrl}/student/register`, fd)
-            .then((resp) => {
-              setMessage(resp.data.message);
-              setType("success");
-              Formik.resetForm();
-              handleClearFile();
-            })
-            .catch((e) => {
-              setMessage(e.response.data.message);
-              setType("error");
-            });
-        } else {
-          setMessage("Please provide an image.");
-          setType("error");
-        }
-      }
-    },
-  });
-
-  const fetchStudentClass = () => {
-    axios
-      .get(`${baseUrl}/class/fetch-all`)
-      .then((resp) => {
-        setStudentClass(resp.data.data);
-      })
-      .catch(() => console.log("Error in fetching student Class"));
-  };
-
-  const fetchStudents = () => {
-    axios
-      .get(`${baseUrl}/student/fetch-with-query`, { params })
-      .then((resp) => {
-        setStudents(resp.data.data);
-      })
-      .catch(() => console.log("Error in fetching students data"));
-  };
-
-  useEffect(() => {
-    fetchStudents();
-    fetchStudentClass();
-  }, [message, params]);
-
-  //   CLEARING IMAGE FILE REFENCE FROM INPUT
-  const fileInputRef = useRef(null);
-  const handleClearFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Clear the file input
+  const handleImageChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImageUrl(URL.createObjectURL(selectedFile));
     }
-    setFile(null); // Reset the file state
-    setImageUrl(null); // Clear the image preview
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submit triggered");
+    console.log("Form Data:", formData);
+    console.log("Is Edit Mode:", isEdit);
+    console.log("Editing ID:", editId);
+
+    let schemaToUse = studentSchema;
+
+  // 👉 If editing, make a modified schema that doesn't require password
+  if (isEdit) {
+    schemaToUse = studentSchema.shape({
+      password: studentSchema.fields.password.notRequired(),
+    });
+  }
+
+  try {
+    await schemaToUse.validate(formData, { abortEarly: false });
+    setErrors({});
+  } catch (validationError) {
+    const formatted = {};
+    validationError.inner.forEach((err) => {
+      formatted[err.path] = err.message;
+    });
+    setErrors(formatted);
+    return;
+  }
+
+    const fd = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (!(isEdit && key === "password" && formData[key] === "")) {
+        fd.append(key, formData[key]);
+      }
+    });
+    if (file) fd.append("image", file);
+    console.log("tried")
+    const api = isEdit
+      ? axios.patch(`${baseUrl}/student/update/${editId}`, fd)
+      : axios.post(`${baseUrl}/student/register`, fd);
+      
+      
+
+    api
+      .then((resp) => {
+        setMessage(resp.data.message);
+        setType("success");
+        cancelEdit();
+      })
+      .catch((e) => {
+        setMessage(e.response?.data?.message || "Submission failed.");
+        setType("error");
+      });
+  };
+
   return (
     <>
-      {message && (
-        <CustomizedSnackbars
-          reset={resetMessage}
-          type={type}
-          message={message}
-        />
-      )}
+      {message && <CustomizedSnackbars reset={resetMessage} type={type} message={message} />}
       <Box sx={{ padding: "40px 10px 20px 10px" }}>
-        <Box sx={{ display: "flex", justifyContent: "center" }} component="div">
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Typography variant="h2">Students</Typography>
         </Box>
 
         <Box sx={{ padding: "40px" }}>
           <Paper sx={{ padding: "20px", margin: "10px" }}>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: "800", textAlign: "center" }}
-            >
+            <Typography variant="h4" sx={{ fontWeight: 800, textAlign: "center" }}>
               {isEdit ? "Edit Student" : "Add New Student"}
             </Typography>
 
-            <Box
-              component="form"
-              noValidate
-              autoComplete="off"
-              onSubmit={Formik.handleSubmit}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Typography sx={{ marginRight: "50px" }} variant="h4">
                   Student Pic
                 </Typography>
-                <TextField
-                  sx={{ marginTop: "10px" }}
-                  id="filled-basic"
-                  variant="outlined"
-                  name="file"
-                  type="file"
-                  onChange={addImage}
-                  inputRef={fileInputRef}
-                />
-
+                <TextField type="file" name="file" onChange={handleImageChange} inputRef={fileInputRef} />
                 {imageUrl && (
-                  <Box sx={{ position: "relative" }}>
-                    <CardMedia
-                      component="img"
-                      image={imageUrl}
-                      height="240px"
-                    />
+                  <Box sx={{ position: "relative", marginLeft: 2 }}>
+                    <CardMedia component="img" image={imageUrl} height="240" sx={{ objectFit: "cover" }} />
                   </Box>
                 )}
               </Box>
-               {/* Other input fields go here */}
-               <TextField
-                fullWidth
-                sx={{ marginTop: "10px" }}
-                id="filled-basic"
-                label="email "
-                variant="outlined"
-                name="email"
-                value={Formik.values.email}
-                onChange={Formik.handleChange}
-                onBlur={Formik.handleBlur}
-              />
-              {Formik.touched.email && Formik.errors.email && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.email}
-                </p>
-              )}
 
-              <TextField
-                fullWidth
-                sx={{ marginTop: "10px" }}
-                id="filled-basic"
-                label="name "
-                variant="outlined"
-                name="name"
-                value={Formik.values.name}
-                onChange={Formik.handleChange}
-                onBlur={Formik.handleBlur}
-              />
-              {Formik.touched.name && Formik.errors.name && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.name}
-                </p>
-              )}
+              {["email", "name", "age", "guardian", "guardian_phone"].map((field) => (
+                <TextField
+                  key={field}
+                  fullWidth
+                  label={field.charAt(0).toUpperCase() + field.slice(1).replace("_", " ")}
+                  name={field}
+                  variant="outlined"
+                  value={formData[field]}
+                  onChange={handleChange}
+                  sx={{ mt: 2 }}
+                  error={Boolean(errors[field])}
+                  helperText={errors[field]}
+                />
+              ))}
 
-              <FormControl sx={{ minWidth: "220px", marginTop: "10px" }}>
-                <InputLabel id="demo-simple-select-label">Class</InputLabel>
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel>Class</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Class"
                   name="student_class"
-                  onChange={Formik.handleChange}
-                  onBlur={Formik.handleBlur}
-                  value={Formik.values.student_class}
+                  value={formData.student_class}
+                  onChange={handleChange}
+                  onBlur={handleChange}
+                  label="Class"
                 >
-                  {studentClass &&
-                    studentClass.map((value, i) => {
-                      return (
-                        <MenuItem key={i} value={value._id}>
-                          {value.class_text}
-                        </MenuItem>
-                      );
-                    })}
+                  {studentClass.map((cls) => (
+                    <MenuItem key={cls._id} value={cls._id}>
+                      {cls.class_text}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
-              {Formik.touched.student_class && Formik.errors.student_class && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.student_class}
-                </p>
-              )}
 
-              <br />
-              <FormControl sx={{ minWidth: "220px", marginTop: "10px" }}>
-                <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <InputLabel>Gender</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Gender"
                   name="gender"
-                  onChange={Formik.handleChange}
-                  onBlur={Formik.handleBlur}
-                  value={Formik.values.gender}
+                  value={formData.gender}
+                  onChange={handleChange}
+                  onBlur={handleChange}
+                  label="Gender"
                 >
-                  <MenuItem value={""}>Select Gender</MenuItem>
-                  <MenuItem value={"male"}>Male</MenuItem>
-                  <MenuItem value={"female"}>Female</MenuItem>
-                  <MenuItem value={"other"}>Other</MenuItem>
+                  <MenuItem value="">Select Gender</MenuItem>
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </Select>
               </FormControl>
-              {Formik.touched.gender && Formik.errors.gender && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.gender}
-                </p>
+
+              {!isEdit && (
+                <TextField
+                  fullWidth
+                  label="Password"
+                  name="password"
+                  type="password"
+                  variant="outlined"
+                  value={formData.password}
+                  onChange={handleChange}
+                  sx={{ mt: 2 }}
+                  error={Boolean(errors.password)}
+                  helperText={errors.password}
+                />
               )}
 
-              <TextField
-                fullWidth
-                sx={{ marginTop: "10px" }}
-                id="filled-basic"
-                label="Age "
-                variant="outlined"
-                name="age"
-                value={Formik.values.age}
-                onChange={Formik.handleChange}
-                onBlur={Formik.handleBlur}
-              />
-              {Formik.touched.age && Formik.errors.age && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.age}
-                </p>
-              )}
-
-              <TextField
-                fullWidth
-                sx={{ marginTop: "10px" }}
-                id="filled-basic"
-                label="Guardian "
-                variant="outlined"
-                name="guardian"
-                value={Formik.values.guardian}
-                onChange={Formik.handleChange}
-                onBlur={Formik.handleBlur}
-              />
-              {Formik.touched.guardian && Formik.errors.guardian && (
-                <p style={{ color: "red", textTransform: "capitalize" }}>
-                  {Formik.errors.guardian}
-                </p>
-              )}
-
-              <TextField
-                fullWidth
-                sx={{ marginTop: "10px" }}
-                id="filled-basic"
-                label="Guardian Phone "
-                variant="outlined"
-                name="guardian_phone"
-                value={Formik.values.guardian_phone}
-                onChange={Formik.handleChange}
-                onBlur={Formik.handleBlur}
-              />
-              {Formik.touched.guardian_phone &&
-                Formik.errors.guardian_phone && (
-                  <p style={{ color: "red", textTransform: "capitalize" }}>
-                    {Formik.errors.guardian_phone}
-                  </p>
-                )}
-
-{!isEdit && (
-                <>
-                  <TextField
-                    fullWidth
-                    sx={{ marginTop: "10px" }}
-                    id="filled-basic"
-                    label="Password "
-                    variant="outlined"
-                    name="password"
-                    value={Formik.values.password}
-                    onChange={Formik.handleChange}
-                    onBlur={Formik.handleBlur}
-                  />
-                  {Formik.touched.password && Formik.errors.password && (
-                    <p style={{ color: "red", textTransform: "capitalize" }}>
-                      {Formik.errors.password}
-                    </p>
-                  )}
-                </>
-              )}
-              
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                sx={{ marginTop: "10px" }}
-              >
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
                 {isEdit ? "Update Student" : "Register Student"}
               </Button>
               {isEdit && (
-                <Button
-                  fullWidth
-                  onClick={cancelEdit}
-                  variant="outlined"
-                  sx={{ marginTop: "10px" }}
-                >
+                <Button variant="outlined" fullWidth sx={{ mt: 2 }} onClick={cancelEdit}>
                   Cancel
                 </Button>
               )}
-            </Box>
+            </form>
           </Paper>
         </Box>
 
         <Box sx={{ padding: "40px", display: "flex", flexWrap: "wrap" }}>
-          {students.length > 0 &&
-            students.map((value, i) => (
-              <StudentCardAdmin
-                key={i}
-                student={value}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-              />
-            ))}
+          {students.map((student, i) => (
+            <StudentCardAdmin
+              key={i}
+              student={student}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            />
+          ))}
         </Box>
       </Box>
     </>
