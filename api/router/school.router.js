@@ -7,7 +7,7 @@ const router = Router();
 router.post('/register',upload.single('image'), registerSchool);
 router.get("/all", getAllSchools);
 router.post("/login", loginSchool);
-router.patch("/update",authMiddleware(['SCHOOL']), updateSchoolWithId);
+router.patch("/update",authMiddleware(['SCHOOL']),upload.single('image'), updateSchoolWithId);
 router.get("/fetch-single",authMiddleware(['SCHOOL']),getSchoolOwnData);
 router.get("/sign-out", signOut);
 router.get("/is-login",  isSchoolLoggedIn)
