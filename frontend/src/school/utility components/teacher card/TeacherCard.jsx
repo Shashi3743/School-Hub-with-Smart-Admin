@@ -94,6 +94,7 @@ export default function TeacherCardAdmin({
             sx={{ background: "gold", color: "#222222" }}
             onClick={() => {
               handleEdit(teacher._id);
+               window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
             }}
           >
             Edit
