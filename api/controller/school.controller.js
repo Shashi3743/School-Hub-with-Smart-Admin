@@ -12,7 +12,7 @@ const jwtSecret = process.env.JWTSECRET;
 // ========================
 export async function getAllSchools(req, res) {
   try {
-    const schools = await School.find().select(['-_id', '-password', '-email', '-owner_name', '-createdAt']);
+    const schools = await School.find().select(['-password', '-email', '-owner_name', '-createdAt']);
     res.status(200).json({ success: true, message: "Schools fetched successfully", data: schools });
   } catch (error) {
     console.error("Error in getAllSchools:", error);
@@ -183,5 +183,42 @@ export function isSchoolLoggedIn(req, res) {
   } catch (error) {
     console.error("isSchoolLoggedIn error:", error);
     res.status(500).json({ success: false, message: "Server error verifying login." });
+  }
+}
+
+
+export async function loginAsSchoolByAdmin(req, res) {
+  try {
+    const { schoolId } = req.params;
+    const school = await School.findById(schoolId);
+    if (!school) {
+      return res.status(404).json({ success: false, message: "School not found." });
+    }
+
+    const token = jwt.sign({
+      id: school._id,
+      schoolId: school._id,
+      school_name: school.school_name,
+      owner_name: school.owner_name,
+      image_url: school.school_image,
+      role: 'SCHOOL',
+      impersonatedBy: 'ADMIN'
+    }, jwtSecret);
+
+    res.header("Authorization", token);
+    res.status(200).json({
+      success: true,
+      message: "Admin impersonation successful",
+      user: {
+        id: school._id,
+        school_name: school.school_name,
+        owner_name: school.owner_name,
+        image_url: school.school_image,
+        role: 'SCHOOL'
+      }
+    });
+  } catch (error) {
+    console.error("Admin login as school error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 }
