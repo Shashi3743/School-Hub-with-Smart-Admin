@@ -40,6 +40,19 @@ export default function Students() {
   const fileInputRef = useRef(null);
   const [params, setParams] = useState({});
 
+
+  const handleSearch = (e) => {
+      let newParam;
+      if (e.target.value !== "") {
+        newParam = { ...params, search: e.target.value };
+      } else {
+        newParam = { ...params };
+        delete newParam["search"];
+      }
+  
+      setParams(newParam);
+    };
+
   const resetMessage = () => setMessage("");
 
   const fetchStudentClass = () => {
@@ -280,7 +293,29 @@ export default function Students() {
               )}
             </form>
           </Paper>
+          
+           
         </Box>
+
+         <Box
+            sx={{
+              padding: "5px",
+              minWidth: 120,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+           
+           
+  
+            <TextField
+              id=""
+              label="Search Name  .. "
+              onChange={handleSearch}
+            />
+          </Box>
 
         <Box sx={{ padding: "40px", display: "flex", flexWrap: "wrap" }}>
           {students.map((student, i) => (

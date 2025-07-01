@@ -80,7 +80,7 @@ const SchoolDashboard = () => {
         const subjectsRes = await axios.get(`${baseUrl}/subject/fetch-all`);
         const schoolData = await axios.get(`${baseUrl}/school/fetch-single`);
 
-        // console.log(studentRes, teacherRes)
+        console.log(studentRes, teacherRes)
         setSchoolDetails(schoolData.data.data);
         setSchoolName(schoolData.data.data.school_name);
         setSchoolImage(schoolData.data.data.school_image)

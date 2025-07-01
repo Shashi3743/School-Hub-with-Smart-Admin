@@ -1,25 +1,6 @@
 /* eslint-disable react/prop-types */
+import { Card, CardMedia, CardContent, CardActions, Button, Typography } from "@mui/material";
 
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
-import { Button, Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "transparent",
-  color: "#fff",
-  boxShadow: "none",
-  textTransform: "uppercase",
-}));
 export default function StudentCardAdmin({
   handleEdit,
   student,
@@ -30,86 +11,90 @@ export default function StudentCardAdmin({
     const dateNu = date.getDate();
     const month = +date.getMonth() + 1;
     const year = date.getFullYear();
-
-    return dateNu + "/" + month + "/" + year;
+    return `${dateNu}/${month}/${year}`;
   };
 
-  useEffect(() => {
-    console.log("Student", student);
-  }, []);
   return (
-    <>
-      <Card sx={{ maxWidth: 545 , margin:'5px'}}>
-        <CardMedia
-          component="img"
-          alt="green iguana"
-          height="360"
-          image={`${student.student_image}`}
-        />
-        <CardContent>
-          <Typography
-            component={"div"}
-            sx={{ typography: "text.secondary" }}
-            variant="h5"
-          >
-            <b>Name :</b>
-            <span>{student.name}</span>
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Student Class :</b>
-            {student.student_class && student.student_class.class_text}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Age :</b>
-            {student.age}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Gender :</b>
-            {student.gender}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Guardian :</b>
-            {student.guardian}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Guardian Phone :</b>
-            {student.guardian_phone}
-          </Typography>
-          <Typography component={"div"} variant="p">
-                  <b>Date of Admission:</b>
-                  <span>{convertDate(student.createdAt)}</span>{" "}
-                </Typography>
-        </CardContent>
-        <CardActions>
-          {/* <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button> */}
-          {/* <Box component={'div'} sx={{position:"absolute",width:"100%", bottom:0, display:'flex',justifyContent:"end"}} > */}
-          <Button
+    <Card
+      sx={{
+        width: 345,
+        height: 400, // total card height
+        margin: "8px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Image */}
+      <CardMedia
+        component="img"
+        image={student.student_image}
+        alt={student.name}
+        sx={{
+          height: "50%", // top half image
+          objectFit: "cover",
+        }}
+      />
+
+      {/* Content */}
+      <CardContent
+        sx={{
+          flex: "1 1 auto",
+          overflowY: "auto",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          {student.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Class:</b>{" "}
+          {student.student_class?.class_text || "N/A"}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Age:</b> {student.age}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Gender:</b> {student.gender}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Guardian:</b> {student.guardian}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Guardian Phone:</b> {student.guardian_phone}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Date of Admission:</b> {convertDate(student.createdAt)}
+        </Typography>
+      </CardContent>
+
+      {/* Buttons */}
+      <CardActions
+        sx={{
+          justifyContent: "flex-end",
+          paddingX: 1,
+          paddingY: 1,
+          borderTop: "1px solid #eee",
+        }}
+      >
+        <Button
           size="small"
-            variant="contained"
-            sx={{ background: "red", color: "#fff" }}
-            onClick={() => {
-              // console.log(student._id)
-              handleDelete(student._id);
-            }}
-          >
-            Delete
-          </Button>
-          <Button
+          variant="contained"
+          sx={{ background: "red", color: "#fff" }}
+          onClick={() => handleDelete(student._id)}
+        >
+          Delete
+        </Button>
+        <Button
           size="small"
-            variant="contained"
-            sx={{ background: "gold", color: "#222222" }}
-            onClick={() => {
-              // console.log(student._id)
-              handleEdit(student._id);
-            }}
-          >
-            Edit
-          </Button>
-          {/* </Box> */}
-        </CardActions>
-      </Card>
-      
-    </>
+          variant="contained"
+          sx={{ background: "gold", color: "#222" }}
+          onClick={() => {
+            handleEdit(student._id);
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+          }}
+        >
+          Edit
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

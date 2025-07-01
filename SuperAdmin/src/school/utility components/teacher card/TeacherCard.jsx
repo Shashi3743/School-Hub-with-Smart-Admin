@@ -1,25 +1,6 @@
 /* eslint-disable react/prop-types */
+import { Card, CardMedia, CardContent, CardActions, Button, Typography } from "@mui/material";
 
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
-import { Button, Typography } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "transparent",
-  color: "#fff",
-  boxShadow: "none",
-  textTransform: "uppercase",
-}));
 export default function TeacherCardAdmin({
   handleEdit,
   teacher,
@@ -30,78 +11,88 @@ export default function TeacherCardAdmin({
     const dateNu = date.getDate();
     const month = +date.getMonth() + 1;
     const year = date.getFullYear();
-
-    return dateNu + "/" + month + "/" + year;
+    return `${dateNu}/${month}/${year}`;
   };
 
-
   return (
-    <>
-      <Card sx={{ maxWidth: 545,margin:2 }}>
-        <CardMedia
-          component="img"
-          alt="green iguana"
-          height="340"
-          image={`${teacher.teacher_image}`}
-        />
-        <CardContent>
-          <Typography
-            component={"div"}
-            sx={{ typography: "text.secondary" }}
-            variant="h5"
-          >
-            <b>Name :</b>
-            <span>{teacher.name}</span>
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Email :</b>
-            {teacher.email}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Age :</b>
-            {teacher.age}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Gender :</b>
-            {teacher.gender}
-          </Typography>
-          <Typography component={"div"} variant="h5">
-            <b>Qualification:</b>
-            {teacher.qualification}
-          </Typography>
-          <Typography component={"div"} variant="p">
-                  <b>Date of Join:</b>
-                  <span>{convertDate(teacher.createdAt)}</span>{" "}
-                </Typography>
-        </CardContent>
-        <CardActions>
-          {/* <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button> */}
-          {/* <Box component={'div'} sx={{position:"absolute",width:"100%", bottom:0, display:'flex',justifyContent:"end"}} > */}
-          <Button
+    <Card
+      sx={{
+        width: 345,
+        height: 400, // Total height of the card
+        margin: 2,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Image */}
+      <CardMedia
+        component="img"
+        sx={{
+          height: "50%",
+          objectFit: "cover",
+        }}
+        image={teacher.teacher_image}
+        alt={teacher.name}
+      />
+
+      {/* Content */}
+      <CardContent
+        sx={{
+          flex: "1 1 auto",
+          overflowY: "auto",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          {teacher.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Email:</b> {teacher.email}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Age:</b> {teacher.age}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Gender:</b> {teacher.gender}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Qualification:</b> {teacher.qualification}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <b>Date of Join:</b> {convertDate(teacher.createdAt)}
+        </Typography>
+      </CardContent>
+
+      {/* Buttons pinned to bottom */}
+      <CardActions
+        sx={{
+          justifyContent: "flex-end",
+          marginTop: "auto", // this pushes CardActions to the bottom
+          paddingX: 1,
+          paddingY: 1,
+          borderTop: "1px solid #eee",
+        }}
+      >
+        <Button
           size="small"
-            variant="contained"
-            sx={{ background: "red", color: "#fff" }}
-            onClick={() => {
-              handleDelete(teacher._id);
-            }}
-          >
-            Delete
-          </Button>
-          <Button
+          variant="contained"
+          sx={{ background: "red", color: "#fff" }}
+          onClick={() => handleDelete(teacher._id)}
+        >
+          Delete
+        </Button>
+        
+        <Button
           size="small"
-            variant="contained"
-            sx={{ background: "gold", color: "#222222" }}
-            onClick={() => {
-              handleEdit(teacher._id);
-            }}
-          >
-            Edit
-          </Button>
-          {/* </Box> */}
-        </CardActions>
-      </Card>
-      
-    </>
+          variant="contained"
+          sx={{ background: "gold", color: "#222" }}
+          onClick={() => {
+            handleEdit(teacher._id);
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+          }}
+        >
+          Edit
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
