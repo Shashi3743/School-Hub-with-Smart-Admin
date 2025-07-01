@@ -1,4 +1,3 @@
-// Carousel.js
 import React, { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Typography, Box, Button } from '@mui/material';
@@ -44,21 +43,19 @@ const Carousel = () => {
   });
 
   return (
-    <Box sx={{ position: 'relative', width: '100%' }} {...swipeHandlers}>
+    <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden' }} {...swipeHandlers}>
       <Box
         sx={{
           display: 'flex',
           transition: 'transform 0.5s ease',
           transform: `translateX(-${activeIndex * 100}%)`,
-          width: `${carouselItems.length * 100}%`,
         }}
       >
         {carouselItems.map((item, index) => (
           <Box
             key={index}
             sx={{
-              width: '100%',
-              flexShrink: 0,
+              flex: '0 0 100%',
               position: 'relative',
               textAlign: 'center',
               color: 'white',
@@ -67,7 +64,12 @@ const Carousel = () => {
             <img
               src={item.image}
               alt={item.title}
-              style={{ width: '100%', height: '70vh', minHeight: '400px', objectFit: 'cover' }}
+              style={{
+                width: '100%',
+                height: '70vh',
+                minHeight: '400px',
+                objectFit: 'cover',
+              }}
             />
             <Box
               sx={{

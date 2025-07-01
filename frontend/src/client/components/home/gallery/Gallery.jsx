@@ -59,7 +59,7 @@ const Gallery = () => {
               alt={school.school_name}
               loading="lazy"
               style={{
-                height: "200px",          // ✅ Increased height
+                height: "250px",          // ✅ Increased height
                 width: "100%",            // Full width
                 objectFit: "cover",       // Crop image nicely
                 borderRadius: "8px",

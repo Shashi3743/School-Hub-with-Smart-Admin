@@ -81,6 +81,13 @@ const Gallery = () => {
                   src={school.school_image}
                   alt={school.school_name}
                   loading="lazy"
+                  style={{
+                    height: "250px",          // ✅ Increased height
+                    width: "100%",            // Full width
+                    objectFit: "cover",       // Crop image nicely
+                    borderRadius: "8px",
+                    display: "block",
+                  }}
                 />
                 <Typography variant='h6'>{school.school_name}</Typography>
               </ImageListItem>
