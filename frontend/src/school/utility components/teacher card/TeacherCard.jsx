@@ -81,6 +81,13 @@ export default function TeacherCardAdmin({
           Delete
         </Button>
         <Button
+          variant="contained"
+          sx={{ background: "red", color: "#fff" }}
+          onClick={() => handleDelete(teacher._id)}
+        >
+          Delete
+        </Button>
+        <Button
           size="small"
           variant="contained"
           sx={{ background: "gold", color: "#222" }}

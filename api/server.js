@@ -15,8 +15,10 @@ import examRouter from './router/examination.router.js';
 import attendanceRoutes from './router/attendance.router.js';
 import periodRoutes from "./router/period.router.js";
 import noticeRoutes from "./router/notice.router.js";
+import adminRoutes from "./router/superAdmin.router.js"
 import authMiddleware from "./auth/auth.js";
 import { authCheck } from "./controller/auth.controller.js";
+
 
 const app = express();
 
@@ -47,6 +49,7 @@ app.use('/api/examination', examRouter)
 app.use('/api/attendance', attendanceRoutes)
 app.use('/api/period',  periodRoutes)
 app.use('/api/notices', noticeRoutes)
+app.use('/api/admin', adminRoutes)
 
 app.get('/api/auth/check',authCheck)
 
