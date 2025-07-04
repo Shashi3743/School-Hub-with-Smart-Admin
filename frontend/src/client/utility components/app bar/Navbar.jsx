@@ -59,33 +59,53 @@ function Navbar() {
             <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
             </IconButton>
-            <Menu
-              anchorEl={anchorElNav}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {!authenticated && (
-                <>
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/register" className="nav-list">
-                      <Button className="button-beautify button-beautify-one" sx={{ color: 'white' }}>
-                        Register
-                      </Button>
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/login" className="nav-list">
-                      <Button className="button-beautify button-beautify-one" sx={{ color: 'white' }}>
-                        <LoginIcon sx={{ marginRight: 1 }} /> Login
-                      </Button>
-                    </Link>
-                  </MenuItem>
-                </>
-              )}
-            </Menu>
+              <Menu
+  anchorEl={anchorElNav}
+  open={Boolean(anchorElNav)}
+  onClose={handleCloseNavMenu}
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+  sx={{ display: { xs: 'block', md: 'none' } }}
+>
+  {!authenticated ? (
+    <>
+      <MenuItem onClick={handleCloseNavMenu}>
+        <Link to="/login" className="nav-list">
+          <Button startIcon={<LoginIcon />} sx={{ color: 'black' }}>
+            Login
+          </Button>
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleCloseNavMenu}>
+        <Link to="/register" className="nav-list">
+          <Button sx={{ color: 'black' }}>
+            Register
+          </Button>
+        </Link>
+      </MenuItem>
+    </>
+  ) : (
+    <>
+      <MenuItem onClick={handleCloseNavMenu}>
+        <Link to="/logout" className="nav-list">
+          <Button sx={{ color: 'black' }}>
+            Log Out
+          </Button>
+        </Link>
+      </MenuItem>
+      {user?.role && (
+        <MenuItem onClick={handleCloseNavMenu}>
+          <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
+            <Button sx={{ color: 'black' }}>
+              Dashboard
+            </Button>
+          </Link>
+        </MenuItem>
+      )}
+    </>
+  )}
+</Menu>
+
           </Box>
 
           {/* Mobile view short logo */}
@@ -165,20 +185,50 @@ function Navbar() {
               </Button>
               </>
             ) : (
-              <>
-                <Link to="/logout" className="nav-list">
-                  <Button className="button-beautify button-beautify-danger" sx={{ color: 'white' }}>
-                    Log Out
-                  </Button>
-                </Link>
-                {user?.role && (
-                  <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
-                    <Button className="button-beautify button-beautify-one" sx={{ color: 'white' }}>
-                      Dashboard
-                    </Button>
-                  </Link>
-                )}
-              </>
+                   <>
+    <Link to="/logout" className="nav-list">
+      <Button
+        variant="contained"
+        color="error"
+        sx={{
+          color: 'white',
+          opacity: 1,
+          pointerEvents: 'auto',
+          textTransform: 'none',
+          fontWeight: 600,
+          borderRadius: 2,
+          boxShadow: 1,
+          px: 3,
+          py: 1,
+          '&:hover': { boxShadow: 3 },
+          ml: 2,
+        }}
+      >
+        Log Out
+      </Button>
+    </Link>
+    {user?.role && (
+      <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            color: 'white',
+            textTransform: 'none',
+            fontWeight: 600,
+            borderRadius: 2,
+            boxShadow: 1,
+            px: 3,
+            py: 1,
+            '&:hover': { boxShadow: 3 },
+            ml: 2,
+          }}
+        >
+          Dashboard
+        </Button>
+      </Link>
+    )}
+  </>
             )}
           </Box>
         </Toolbar>
