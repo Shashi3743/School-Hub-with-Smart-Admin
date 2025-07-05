@@ -1,7 +1,7 @@
 {
-  "name": "movie_casting",
+  "name": "school-management-system",
   "version": "1.0.0",
-  "description": "Movie casting api",
+  "description": "School Management System api",
   "main": "server.js",
   "type": "module",
   "scripts": {

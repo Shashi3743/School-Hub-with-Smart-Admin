@@ -59,53 +59,46 @@ function Navbar() {
             <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
             </IconButton>
-              <Menu
-  anchorEl={anchorElNav}
-  open={Boolean(anchorElNav)}
-  onClose={handleCloseNavMenu}
-  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-  sx={{ display: { xs: 'block', md: 'none' } }}
->
-  {!authenticated ? (
-    <>
-      <MenuItem onClick={handleCloseNavMenu}>
-        <Link to="/login" className="nav-list">
-          <Button startIcon={<LoginIcon />} sx={{ color: 'black' }}>
-            Login
-          </Button>
-        </Link>
-      </MenuItem>
-      <MenuItem onClick={handleCloseNavMenu}>
-        <Link to="/register" className="nav-list">
-          <Button sx={{ color: 'black' }}>
-            Register
-          </Button>
-        </Link>
-      </MenuItem>
-    </>
-  ) : (
-    <>
-      <MenuItem onClick={handleCloseNavMenu}>
-        <Link to="/logout" className="nav-list">
-          <Button sx={{ color: 'black' }}>
-            Log Out
-          </Button>
-        </Link>
-      </MenuItem>
-      {user?.role && (
-        <MenuItem onClick={handleCloseNavMenu}>
-          <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
-            <Button sx={{ color: 'black' }}>
-              Dashboard
-            </Button>
-          </Link>
-        </MenuItem>
-      )}
-    </>
-  )}
-</Menu>
-
+            <Menu
+              anchorEl={anchorElNav}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              sx={{ display: { xs: 'block', md: 'none' } }}
+            >
+              {!authenticated ? (
+                <>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/login" className="nav-list">
+                      <Button startIcon={<LoginIcon />} sx={{ color: 'black' }}>
+                        Login
+                      </Button>
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/register" className="nav-list">
+                      <Button sx={{ color: 'black' }}>Register</Button>
+                    </Link>
+                  </MenuItem>
+                </>
+              ) : (
+                <>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/logout" className="nav-list">
+                      <Button sx={{ color: 'black' }}>Log Out</Button>
+                    </Link>
+                  </MenuItem>
+                  {user?.role && (
+                    <MenuItem onClick={handleCloseNavMenu}>
+                      <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
+                        <Button sx={{ color: 'black' }}>Dashboard</Button>
+                      </Link>
+                    </MenuItem>
+                  )}
+                </>
+              )}
+            </Menu>
           </Box>
 
           {/* Mobile view short logo */}
@@ -130,106 +123,99 @@ function Navbar() {
             </Typography>
           </Link>
 
-          {/* Desktop buttons */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-            {!authenticated ? (
-              <>
-                <Button
-                component={Link}
-                to="/login"
-                variant="contained"           // "contained" for filled, "outlined" for border only
-                color="primary"               // Uses theme's primary color for contrast
-                startIcon={<LoginIcon />}     // Icon on the left
-                size="medium"                 // "small", "medium", or "large"
-                sx={{
-                  textTransform: 'none',      // Keeps "Login" as is, not uppercase
-                  fontWeight: 600,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    boxShadow: 3,
-                  },
-                }}
-                aria-label="Login"
-              >
-                Login
-              </Button>
-                {/* <Link to="/register" className="nav-list">
-                  <Button className="button-beautify button-beautify-one" sx={{ color: 'white' }}>
+          {/* Desktop view buttons */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              {!authenticated ? (
+                <>
+                  <Button
+                    component={Link}
+                    to="/login"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<LoginIcon />}
+                    size="medium"
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      borderRadius: 2,
+                      boxShadow: 1,
+                      px: 3,
+                      py: 1,
+                      '&:hover': {
+                        boxShadow: 3,
+                      },
+                    }}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/register"
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      borderRadius: 2,
+                      px: 3,
+                      py: 1,
+                      '&:hover': { boxShadow: 1 },
+                    }}
+                  >
                     Register
                   </Button>
-                </Link> */}
-                <Button
-                component={Link}
-                to="/register"
-                variant="contained"           // "contained" for filled, "outlined" for border only
-                color="primary"               // Uses theme's primary color for contrast
-                     // Icon on the left
-                size="medium"                 // "small", "medium", or "large"
-                sx={{
-                  textTransform: 'none',      // Keeps "Login" as is, not uppercase
-                  fontWeight: 600,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    boxShadow: 3,
-                  },
-                }}
-                aria-label="Login"
-              >
-                Register
-              </Button>
-              </>
-            ) : (
-                   <>
-    <Link to="/logout" className="nav-list">
-      <Button
-        variant="contained"
-        color="error"
-        sx={{
-          color: 'white',
-          opacity: 1,
-          pointerEvents: 'auto',
-          textTransform: 'none',
-          fontWeight: 600,
-          borderRadius: 2,
-          boxShadow: 1,
-          px: 3,
-          py: 1,
-          '&:hover': { boxShadow: 3 },
-          ml: 2,
-        }}
-      >
-        Log Out
-      </Button>
-    </Link>
-    {user?.role && (
-      <Link to={`/${user.role.toLowerCase()}`} className="nav-list">
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            color: 'white',
-            textTransform: 'none',
-            fontWeight: 600,
-            borderRadius: 2,
-            boxShadow: 1,
-            px: 3,
-            py: 1,
-            '&:hover': { boxShadow: 3 },
-            ml: 2,
-          }}
-        >
-          Dashboard
-        </Button>
-      </Link>
-    )}
-  </>
-            )}
+                </>
+              ) : (
+                <>
+                  <Button
+                    component={Link}
+                    to="/logout"
+                    variant="contained"
+                    color="error"
+                    size="medium"
+                    sx={{
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      borderRadius: 2,
+                      boxShadow: 1,
+                      px: 3,
+                      py: 1,
+                      '&:hover': { boxShadow: 3 },
+                    }}
+                  >
+                    Log Out
+                  </Button>
+                  {user?.role && (
+                    <Button
+                      component={Link}
+                      to={`/${user.role.toLowerCase()}`}
+                      variant="contained"
+                      color="primary"
+                      size="medium"
+                      sx={{
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        borderRadius: 2,
+                        boxShadow: 1,
+                        px: 3,
+                        py: 1,
+                        '&:hover': { boxShadow: 3 },
+                      }}
+                    >
+                      Dashboard
+                    </Button>
+                  )}
+                </>
+              )}
+            </Box>
           </Box>
         </Toolbar>
       </Container>

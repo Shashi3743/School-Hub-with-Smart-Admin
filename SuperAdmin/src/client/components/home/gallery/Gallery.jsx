@@ -75,16 +75,16 @@ const Gallery = () => {
               <ImageListItem
                 key={i}
                 sx={{ cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
-                onClick={() => (user?.role==='ADMIN'?handleLoginAsSchool(school):handleOpen(school))} // <== correct place to trigger modal
+                onClick={() => (user?.role==='ADMIN'?handleLoginAsSchool(school):handleOpen(school))} 
               >
                 <img
                   src={school.school_image}
                   alt={school.school_name}
                   loading="lazy"
                   style={{
-                    height: "250px",          // ✅ Increased height
-                    width: "100%",            // Full width
-                    objectFit: "cover",       // Crop image nicely
+                    height: "250px",          
+                    width: "100%",            
+                    objectFit: "cover",       
                     borderRadius: "8px",
                     display: "block",
                   }}

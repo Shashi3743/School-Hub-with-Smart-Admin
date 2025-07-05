@@ -30,7 +30,6 @@ function Navbar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Logo and Title */}
           <Link className="nav-list" to="/" style={{ textDecoration: 'none' }}>
             <Typography
               variant="h6"
@@ -55,7 +54,7 @@ function Navbar() {
             </Typography>
           </Link>
 
-          {/* Mobile Menu */}
+          {/* Mobile menu icon */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
               <MenuIcon />
@@ -68,19 +67,18 @@ function Navbar() {
               transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {!authenticated && (
+              {!authenticated ? (
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/login" className="nav-list">
-                    <Button className="button-beautify button-beautify-one" sx={{ color: 'white' }}>
-                      <LoginIcon sx={{ marginRight: 1 }} /> Login
+                    <Button startIcon={<LoginIcon />} sx={{ color: 'black' }}>
+                      Login
                     </Button>
                   </Link>
                 </MenuItem>
-              )}
-              {authenticated && (
+              ) : (
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/logout" className="nav-list">
-                    <Button className="button-beautify button-beautify-danger" sx={{ color: 'white' }}>
+                    <Button sx={{ color: 'black' }}>
                       Log Out
                     </Button>
                   </Link>
@@ -89,7 +87,7 @@ function Navbar() {
             </Menu>
           </Box>
 
-          {/* Mobile Short Logo */}
+          {/* Mobile view short logo */}
           <Link className="nav-list" to="/">
             <Typography
               variant="h5"
@@ -111,7 +109,7 @@ function Navbar() {
             </Typography>
           </Link>
 
-          {/* Desktop Buttons */}
+          {/* Desktop view buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
             {!authenticated ? (
               <Button
@@ -138,7 +136,21 @@ function Navbar() {
               </Button>
             ) : (
               <Link to="/logout" className="nav-list">
-                <Button className="button-beautify button-beautify-danger" sx={{ color: 'white' }}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    color: 'white',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderRadius: 2,
+                    boxShadow: 1,
+                    px: 3,
+                    py: 1,
+                    '&:hover': { boxShadow: 3 },
+                    ml: 2,
+                  }}
+                >
                   Log Out
                 </Button>
               </Link>
