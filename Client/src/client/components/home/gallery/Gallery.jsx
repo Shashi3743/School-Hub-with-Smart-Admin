@@ -28,10 +28,12 @@ const Gallery = () => {
     axios
       .get(`${baseUrl}/school/all`)
       .then((resp) => {
-        setSchools(resp.data.data);
+        const data = resp?.data?.data || []; // fallback if undefined
+        setSchools(data);
       })
       .catch((e) => {
-        console.error("ERROR", e);
+        console.error("ERROR fetching schools:", e);
+        setSchools([]); // fallback
       });
   }, []);
 
@@ -41,11 +43,9 @@ const Gallery = () => {
         variant="standard"
         cols={3}
         gap={12}
-        sx={{
-          padding: 2,
-        }}
+        sx={{ padding: 2 }}
       >
-        {schools.map((school, i) => (
+        {Array.isArray(schools) && schools.map((school, i) => (
           <ImageListItem
             key={i}
             sx={{
@@ -59,9 +59,9 @@ const Gallery = () => {
               alt={school.school_name}
               loading="lazy"
               style={{
-                height: "250px",          // ✅ Increased height
-                width: "100%",            // Full width
-                objectFit: "cover",       // Crop image nicely
+                height: "250px",
+                width: "100%",
+                objectFit: "cover",
                 borderRadius: "8px",
                 display: "block",
               }}

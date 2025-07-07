@@ -175,7 +175,7 @@ ADMIN_PASSWORD = (whatever_credentials_you_want_for_admin_login)
 
 ✅ For Client/.env or Admin/.env
 ```bash
-BACKEND_URL= (your_backend_url)
+VITE_BACKEND_URL = (your_backend_url)
 ```
 
 ### 👥 Contributors
