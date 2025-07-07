@@ -10,14 +10,22 @@
 
 ### 🛠️ Built with:
 
+
+
+
+![npm](https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-F04D35.svg?style=flat&logo=Mongoose&logoColor=white)
+![.ENV](https://img.shields.io/badge/.ENV-ECD53F.svg?style=flat&logo=dotenv&logoColor=black)
+![Nodemon](https://img.shields.io/badge/Nodemon-76D04B.svg?style=flat&logo=Nodemon&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3.svg?style=flat&logo=ESLint&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000.svg?style=flat&logo=Express&logoColor=white)
+![JSON](https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B.svg?style=flat&logo=MongoDB&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-646CFF.svg?style=flat&logo=Vite&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-5A29E4.svg?style=flat&logo=Axios&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5.svg?style=flat&logo=Cloudinary&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black)
-![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-06B6D4.svg?style=flat&logo=tailwindcss&logoColor=white)
 
 </div>
 
@@ -25,13 +33,15 @@
 
 ## 📚 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#-prerequisites)
+  - [Installation](#-installation)
+  - [Usage](#-usage)
+  - [Environment Variables](#-environment-variables)
+- [Contributors](#-contributors)
 
 ---
 
@@ -107,144 +117,70 @@ Ensure you have the following installed:
 
 ### ⚙️ Installation
 
-# 1. Clone the repository
+ 1. Clone the repository
 ```bash
 git clone https://github.com/Shashi3743/Multiple-School-Management-System
 ```
-# 2. Navigate to the project directory
+ 2. Navigate to the project directory
 ```bash
 cd Multiple-School-Management-System
 ```
 
-# 3. Install backend dependencies
+ 3. Install backend dependencies
 ```bash
-cd server
+cd Server
 npm install
 ```
 
-# 4. Install frontend dependencies
+ 4. Install frontend dependencies
 ```bash
-cd ../client
+cd ../Client
 npm install
 ```
 
 
 ### ▶️ Usage
 
-To run the project(client/admin):
+Navigate to the respective directory,then
+
+- To run the project(server):
+
+```bash
+npm run start
+```
+- To run the project(client/admin):
 
 ```bash
 npm run dev
 ```
 
-To run the project(server):
 
+### 🔐 Environment Variables
+Before running the project, create .env files in both the server and client directories with the following variables:
+
+✅ For Server/.env
 ```bash
-npm run start
+PORT = (any_available_port)
+JWTSECRET = (your_jwt_secret_key)
+
+MONGODB_URI = (your_MONGODB_URI)
+
+CLOUDINARY_CLOUD_NAME = (your_cloudiary_cloud_name)
+CLOUDINARY_API_KEY = (your_cloudiary_api_key)
+CLOUDINARY_API_SECRET = (your_cloudiary_api_secret)
+
+ADMIN_EMAIL = (whatever_credentials_you_want_for_admin_login)
+ADMIN_PASSWORD = (whatever_credentials_you_want_for_admin_login)
 ```
 
-
-
-
-
-<!-- <div align="center">
-
-# Multiple-School-Management-System
-
-*A scalable multi-tenant platform designed to help multiple schools manage their operations independently, including student enrollment, teacher management, class scheduling, examinations, and attendance tracking.*
-
-![last-commit](https://img.shields.io/github/last-commit/Shashi3743/Multiple-School-Management-System?style=flat&logo=git&logoColor=white&color=0080ff)
-![repo-top-language](https://img.shields.io/github/languages/top/Shashi3743/Multiple-School-Management-System?style=flat&color=0080ff)
-![repo-language-count](https://img.shields.io/github/languages/count/Shashi3743/Multiple-School-Management-System?style=flat&color=0080ff)
-
-*Built with the tools and technologies:*
-
-![Express](https://img.shields.io/badge/Express-000000.svg?style=flat&logo=Express&logoColor=white)
-![JSON](https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white)
-![Markdown](https://img.shields.io/badge/Markdown-000000.svg?style=flat&logo=Markdown&logoColor=white)
-![npm](https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-F04D35.svg?style=flat&logo=Mongoose&logoColor=white)
-![.ENV](https://img.shields.io/badge/.ENV-ECD53F.svg?style=flat&logo=dotenv&logoColor=black)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black)
-![Nodemon](https://img.shields.io/badge/Nodemon-76D04B.svg?style=flat&logo=Nodemon&logoColor=white)
-
-![React](https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black)
-![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5.svg?style=flat&logo=Cloudinary&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF.svg?style=flat&logo=Vite&logoColor=white)
-![Axios](https://img.shields.io/badge/Axios-5A29E4.svg?style=flat&logo=Axios&logoColor=white)
-
-</div>
-
----
-
-## 📚 Table of Contents
-
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Testing](#testing)
-
----
-
-## 📝 Overview
-
-**Multiple-School-Management-System** is a powerful developer tool designed to create a comprehensive online shopping experience.
-
-### 💡 Why Forever-Ecommerce-Website?
-
-This project aims to streamline the e-commerce development process, providing a robust platform for both users and administrators. The core features include:
-
-- 🛒 **Comprehensive Shopping Platform**: A complete solution for users to explore products and manage transactions seamlessly.
-- ⚙️ **Admin Panel**: A streamlined interface for managing user roles, permissions, and system settings efficiently.
-- 📈 **Scalable Architecture**: Ensures the platform can grow with user demand, maintaining performance and reliability.
-- 💳 **Integrated Payment Processing**: Supports multiple payment methods, enhancing user convenience during checkout.
-- 📱 **Responsive Design**: Adapts seamlessly to various devices, improving user experience across platforms.
-- 🔧 **Robust Backend**: Utilizes Node.js and MongoDB for efficient data handling and API interactions, ensuring smooth operation.
-
----
-
-## 🚀 Getting Started
-
-### 📦 Prerequisites
-
-This project requires the following dependencies:
-
-- **Programming Language:** JavaScript
-- **Package Manager:** npm
-
-### ⚙️ Installation
-
-Build **Forever-Ecommerce-Website** from the source and install dependencies:
-
+✅ For Client/.env or Admin/.env
 ```bash
-# 1. Clone the repository:
-git clone https://github.com/Shashi3743/Forever-Ecommerce-Website
-
-# 2. Navigate to the project directory:
-cd Forever-Ecommerce-Website
-
-# 3. Install the dependencies:
-npm install
+BACKEND_URL= (your_backend_url)
 ```
 
-### ▶️ Usage
+### 👥 Contributors
 
-To run the project(client/admin):
+- [Shashi Kumar](https://github.com/Shashi3743)
 
-```bash
-npm run dev
-```
+- [Pawan Singh](https://github.com/PawanSingh037)
 
-To run the project(server):
-
-```bash
-npm run start
-```
-
-### 🧪 Testing
-**Forever-Ecommerce-Website** uses the {test_framework} test framework. Run the test suite with:
-```bash
-npm test
-``` -->
