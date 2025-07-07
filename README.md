@@ -5,7 +5,7 @@ A scalable multi-tenant platform designed to help multiple schools manage their 
 ✅ Multi-Tenant School Architecture
 Supports multiple schools with isolated datasets and permissions.
 
-✅ Role-Based Access Control (RBAC)
+✅ Role-Based Access Control 
 
 Super Admin – Manage schools
 
