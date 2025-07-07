@@ -107,20 +107,26 @@ Ensure you have the following installed:
 
 ### ⚙️ Installation
 
-```bash
 # 1. Clone the repository
+```bash
 git clone https://github.com/Shashi3743/Multiple-School-Management-System
-
+```
 # 2. Navigate to the project directory
+```bash
 cd Multiple-School-Management-System
+```
 
 # 3. Install backend dependencies
+```bash
 cd server
 npm install
+```
 
 # 4. Install frontend dependencies
+```bash
 cd ../client
 npm install
+```
 
 
 ### ▶️ Usage
