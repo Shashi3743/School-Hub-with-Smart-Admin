@@ -47,7 +47,7 @@
 
 ## 📝 Overview
 
-**Multiple School Management System** is a SaaS-based full-stack application built using the MERN stack. It enables centralized management for multiple schools with separate data silos, offering dashboards and controls for Admins, School Owners, Teachers, and Students.
+**School Hub with Smart Admin** is a SaaS-based full-stack application built using the MERN stack. It enables centralized management for multiple schools with separate data silos, offering dashboards and controls for Admins, School Owners, Teachers, and Students.
 
 ---
 
