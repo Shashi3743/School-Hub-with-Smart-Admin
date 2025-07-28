@@ -1,6 +1,6 @@
 <div align="center">
 
-# Multiple School Management System
+# School Hub with Smart Admin
 
 *A scalable multi-tenant SaaS platform designed to help multiple schools manage operations independently — including student enrollment, teacher management, class scheduling, examinations, and attendance tracking.*
 
